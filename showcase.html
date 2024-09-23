@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded Files Showcase</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .team-logo {
+            max-width: 150px;
+            display: block;
+            margin: 0 auto 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <img src="logo.png" alt="Team Logo" class="team-logo"/>
+    <h2 class="text-center">Uploaded Files</h2>
+    <div class="card">
+        <div class="card-body">
+            <ul id="fileList" class="list-group"></ul>
+            <div class="text-center mt-4">
+                <a href="index.html" class="btn btn-secondary">Back to Upload</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fetch the list of JSON files from GCP cloud storage
+    fetch('JSON_FILES_ENDPOINT_URL')
+        .then(response => response.json())
+        .then(data => {
+            const fileList = document.getElementById('fileList');
+            data.files.forEach(file => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.innerHTML = `<a href="${file.url}" target="_blank">${file.name}</a>`;
+                fileList.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = `
+                <li class="list-group-item text-danger">Error loading files: ${error.message}</li>
+            `;
+        });
+</script>
+
+</body>
+</html>
